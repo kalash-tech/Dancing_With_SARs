@@ -306,9 +306,13 @@ export function RegionExplorerView({
               );
             })}
           </div>
-          <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--rr-muted)] tabular-nums">
-            Area [{region.bbox.map((v) => v.toFixed(2)).join(', ')}] ·{' '}
-            {REGION_DATASETS[region.id].zones.length} Zones
+          <div
+            className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--rr-muted)] tabular-nums"
+            title={`Map area [${region.bbox.map((v) => v.toFixed(2)).join(', ')}]`}
+          >
+            {region.granules[0]?.trackNumber != null &&
+              `Track ${String(region.granules[0].trackNumber).padStart(3, '0')} · `}
+            {REGION_DATASETS[region.id].zones.length} Zones · 12-Day Passes
           </div>
         </div>
       </section>

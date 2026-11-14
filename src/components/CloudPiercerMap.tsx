@@ -179,17 +179,42 @@ export function CloudPiercerMap({
 
   const isGunw = region.productType === 'GUNW';
 
-  const layerOptions: Array<{ mode: LayerMode; label: string }> = isGunw
-    ? [
-        { mode: 'GUNW_LOS', label: 'Shift (cm)' },
-        { mode: 'GUNW_COHERENCE', label: 'Trust (γ)' },
-        { mode: 'GCOV_HH', label: 'Base (HH dB)' },
-      ]
-    : [
-        { mode: 'GCOV_HH', label: 'Water (HH)' },
-        { mode: 'GCOV_HV', label: 'Crops (HV)' },
-        { mode: 'GCOV_RATIO', label: 'Water + Crop Mix' },
-      ];
+  const layerOptions: Array<{ mode: LayerMode; label: string; hint: string }> =
+    isGunw
+      ? [
+          {
+            mode: 'GUNW_LOS',
+            label: 'Land Shift (cm)',
+            hint: 'How many centimeters the ground rose or sank after the earthquake.',
+          },
+          {
+            mode: 'GUNW_COHERENCE',
+            label: 'Trust (γ)',
+            hint: 'Signal reliability from 0 to 1 — filters out noisy readings.',
+          },
+          {
+            mode: 'GCOV_HH',
+            label: 'Base (HH dB)',
+            hint: 'Raw radar brightness of the ground surface.',
+          },
+        ]
+      : [
+          {
+            mode: 'GCOV_HH',
+            label: 'Flood Water (HH)',
+            hint: 'Smooth floodwater bounces radar away — shows up as calm, dark water.',
+          },
+          {
+            mode: 'GCOV_HV',
+            label: 'Crops (HV)',
+            hint: 'Plant-bounce radar signal — thicker crops and forests look brighter.',
+          },
+          {
+            mode: 'GCOV_RATIO',
+            label: 'Water + Crop Mix',
+            hint: 'Combines both signals to spot floodwater hidden beneath plant stems.',
+          },
+        ];
 
   const viewMode: MapDisplayMode =
     splitPercent >= 98 ? 'SATELLITE' : splitPercent <= 2 ? 'RADAR' : 'SPLIT';
@@ -226,6 +251,7 @@ export function CloudPiercerMap({
                 type="button"
                 onClick={() => onSelectLayerMode(opt.mode)}
                 aria-pressed={active}
+                title={opt.hint}
                 className={`px-2.5 py-1.5 border font-mono text-[10px] font-bold tracking-[0.12em] whitespace-nowrap shrink-0 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-accent)] ${
                   active
                     ? 'border-[var(--rr-accent-solid)] bg-[var(--rr-accent-solid)] text-white'
@@ -474,6 +500,7 @@ export function CloudPiercerMap({
             <label
               htmlFor="cloud-piercer-range"
               className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--rr-muted)] whitespace-nowrap"
+              title="Drag to compare the real satellite photo with the radar view"
             >
               Satellite / Radar
             </label>
@@ -504,6 +531,7 @@ export function CloudPiercerMap({
               <label
                 htmlFor="coherence-filter-range"
                 className="font-mono text-[10px] font-bold tracking-[0.14em] text-[var(--rr-muted)] whitespace-nowrap"
+                title="Only show radar readings this reliable or better"
               >
                 TRUST γ &ge;
               </label>
@@ -658,24 +686,33 @@ export function CloudPiercerMap({
               ) : (
                 <>
                   <div>
-                    <span className="text-[var(--rr-muted)] block text-[10px]">
-                      HH γ⁰
+                    <span
+                      className="text-[var(--rr-muted)] block text-[10px]"
+                      title="Radar brightness of water — lower means calmer, smoother water"
+                    >
+                      Water (HH)
                     </span>
                     <span className="text-sm font-bold text-[var(--rr-accent)]">
                       {activePass.hhGamma0Db.toFixed(1)} dB
                     </span>
                   </div>
                   <div>
-                    <span className="text-[var(--rr-muted)] block text-[10px]">
-                      Change
+                    <span
+                      className="text-[var(--rr-muted)] block text-[10px]"
+                      title="Difference compared to the dry-ground baseline"
+                    >
+                      vs Dry
                     </span>
                     <span className="text-sm font-bold text-[var(--rr-text)]">
                       {formatSigned(activeDelta?.deltaHhDb ?? 0, 1)} dB
                     </span>
                   </div>
                   <div>
-                    <span className="text-[var(--rr-muted)] block text-[10px]">
-                      HV γ⁰
+                    <span
+                      className="text-[var(--rr-muted)] block text-[10px]"
+                      title="Radar brightness of plants — higher means thicker crops"
+                    >
+                      Crops (HV)
                     </span>
                     <span className="text-sm font-bold text-[var(--rr-text)]">
                       {activePass.hvGamma0Db.toFixed(1)} dB

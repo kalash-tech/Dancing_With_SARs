@@ -97,9 +97,20 @@ export function Navbar({
   }, [isDbPopoverOpen]);
 
   const isLaptopConnected = probeState?.connected === true;
-  const connectedLabel = probeState
+  const isProbingDb = probeState === null;
+  const connectedLabel = isLaptopConnected
     ? `LIVE DB: ${probeState.host} (${probeState.totalH5FilesFound} .H5 • ${probeState.totalSizeGb.toFixed(2)} GB)`
-    : 'LIVE DB: SMIAN_P5 (3 .H5 • 18.04 GB)';
+    : null;
+  const pillVisibleLabel = connectedLabel
+    ? connectedLabel
+    : isProbingDb
+      ? 'Checking Satellite Data…'
+      : 'Built-in Sample Data';
+  const pillAriaLabel = connectedLabel
+    ? `${connectedLabel} — click to edit database URL`
+    : isProbingDb
+      ? 'Checking satellite data connection'
+      : 'Using built-in sample satellite data — team database not connected; click to configure URL';
   const activeProductPlain =
     REGION_DATASETS[activeRegionId].productType === 'GUNW'
       ? 'Ground Shift'
@@ -186,11 +197,7 @@ export function Navbar({
               data-testid="laptop-db-pill"
               onClick={() => setIsDbPopoverOpen((prev) => !prev)}
               aria-expanded={isDbPopoverOpen}
-              aria-label={
-                isLaptopConnected
-                  ? `${connectedLabel} — click to edit database URL`
-                  : 'Local database offline — using built-in data; click to configure URL'
-              }
+              aria-label={pillAriaLabel}
               className={`inline-flex items-center gap-1.5 border px-2 sm:px-2.5 py-1.5 font-mono text-[10px] font-bold tracking-[0.1em] transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-accent)] ${
                 isLaptopConnected
                   ? 'border-[var(--rr-success-border)] bg-[var(--rr-success-bg)] text-[var(--rr-success-text)]'
@@ -199,13 +206,15 @@ export function Navbar({
             >
               <span
                 className={`h-2 w-2 rounded-full shrink-0 ${
-                  isLaptopConnected ? 'bg-[#22C55E]' : 'bg-[#A1A1AA]'
+                  isLaptopConnected
+                    ? 'bg-[#22C55E]'
+                    : isProbingDb
+                      ? 'bg-[#F59E0B]'
+                      : 'bg-[#A1A1AA]'
                 }`}
               />
               <Database className="h-3 w-3 shrink-0" aria-hidden="true" />
-              <span className="hidden lg:inline">
-                {isLaptopConnected ? connectedLabel : 'Local DB (Backup)'}
-              </span>
+              <span className="hidden lg:inline">{pillVisibleLabel}</span>
             </button>
 
             {isDbPopoverOpen && (
@@ -219,7 +228,7 @@ export function Navbar({
                   <div className="flex items-center gap-2">
                     <Database className="h-4 w-4 text-[var(--rr-accent)]" aria-hidden="true" />
                     <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--rr-text)]">
-                      Live Satellite Database
+                      Team Data Connection (Optional)
                     </span>
                   </div>
                   <button
@@ -256,7 +265,7 @@ export function Navbar({
                     htmlFor="laptop-db-url-input"
                     className="block font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--rr-muted)]"
                   >
-                    Database Tunnel URL
+                    Team Database URL
                   </label>
                   <input
                     id="laptop-db-url-input"
