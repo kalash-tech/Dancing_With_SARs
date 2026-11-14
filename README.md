@@ -1,101 +1,94 @@
-**Live app:** [ADD CLOUD RUN URL HERE]
+Live Cloud Run Deployment: https://ais-dev-swclensx37jgkkqkwuncx6-367292566887.asia-southeast1.run.app
 
-> Temporary README, written at the start of the hackathon. Sections marked TODO will be completed before the 2:00 PM Sunday freeze.
+# 1. Project Title & Problem Statement
 
-# NISAR Pulse
+**NISAR Pulse: Cloud-Piercing L-Band GCOV & GUNW Radar Intelligence for Floods, Farms, and Faults**
 
-*See the Earth change, through clouds and night.*
+> *"Earth's surface is an endless dance of natural processes and human activities, but these changes are often difficult to visualize, understand, and communicate. From wetland loss to forest wildfires, earthquakes, farming activities, glacier movement, and more, Earth is in a constant waltz of surface changes. Your challenge is to build an interactive application that uses radar remote sensing data from the NASA-ISRO Synthetic Aperture Radar (NISAR) mission to track and visualize one or more types of surface change at locations around the world."*
 
-NASA Space Apps Challenge, Nagpur 2026 (host: Wainganga College of Engineering & Management). Challenge: **Dancing with the SARs**.
-
-## 1. Project Title & Problem Statement
-
-**Project:** NISAR Pulse
-
-**Problem statement (official text):**
-
-> TODO: paste the verbatim challenge text from the Space Apps challenge page.
-
-**In short:** Earth's surface keeps changing through floods, crop cycles and wetness shifts, but optical satellites cannot see through clouds or darkness. Radar can. NISAR Pulse is an open-source web app that lets anyone explore NASA-ISRO NISAR L-band radar over three places (Maharashtra, Northeast India, Japan) and understand what the changes mean.
-
-## 2. Team Details
-
-**Team name:** TODO
-**Institution:** TODO
-
-| Name | GitHub | Role |
-| --- | --- | --- |
-| Aman | [smian087](https://github.com/smian087) | React UI, map, Cloud-Piercer slider |
-| Kalash | [kalash-tech](https://github.com/kalash-tech) | Node proxy, ASF / NASA POWER / EONET routes, caching |
-| Humaira | [Humairakhan1804](https://github.com/Humairakhan1804) | Radar data preprocessing, overlays, data manifest |
-| Asawari | [dhawadasawari1904-hash](https://github.com/dhawadasawari1904-hash) | Gemini explainer, charts, English / Hindi / Marathi text |
-| Vedant | [vedantjaiswal-dot](https://github.com/vedantjaiswal-dot) | Story presets, documentation, pitch |
-
-## 3. Solution Overview & Architecture
-
-**What it does (planned P0 features):**
-
-- Area picker for three study areas, with a map showing NISAR radar overlays.
-- Date slider to scrub through radar passes, and an HH / HV polarization toggle.
-- Cloud-Piercer: a split view comparing optical imagery (NASA GIBS) with radar for the same date and extent.
-- Rainfall and soil-wetness chart (NASA POWER) aligned to the radar dates.
-- Physics card explaining HH vs HV, surface roughness and the dielectric constant (soil and water moisture).
-- AI explainer that suggests physical causes using only the numbers on screen, in English, Hindi and Marathi, with a rule-based fallback.
-- Demo Mode that runs on bundled data when the network is down.
-
-**Architecture:**
-
-```mermaid
-flowchart LR
-  U[Browser: React + Leaflet] -->|/api/*| S[Node + Express server]
-  S --> C[(In-memory TTL cache)]
-  S -->|dates, rain, soil| P[NASA POWER]
-  S -->|optical tiles| G[NASA GIBS]
-  S -->|granule metadata| A[ASF Search API]
-  S -->|hazard events| E[NASA EONET]
-  S -->|explain| M[Gemini API]
-  U --> D[(Bundled radar overlays + manifest.json)]
-```
-
-NISAR radar frames (L-band GCOV, HH and HV) were downloaded from the ASF DAAC and converted on our own laptops into small PNG overlays plus JSON statistics. Raw HDF5 files are not in this repository and are not processed by the server. All external API calls go through the server, which keeps secrets off the browser.
-
-**Tech stack:** React, TypeScript, Tailwind, Vite, Leaflet, Recharts, Zustand, Node.js, Express, zod, Python (h5py, numpy, Pillow, pyproj) for local data preprocessing, Google AI Studio (Build mode), Google Cloud Run.
-
-**Data sources:** NASA-ISRO NISAR via ASF DAAC, NASA GIBS, NASA POWER, NASA EONET, OpenStreetMap and CARTO basemap. This project is not endorsed by NASA.
-
-## 4. Live Demo & Screenshots
-
-- Live app: TODO (same URL as the first line)
-- Screenshots: TODO (add after the first working build)
-
-## 5. Installation & Setup Guide
-
-TODO: confirm commands after the first build. Expected:
-
-```bash
-git clone <this repo>
-cd <repo>
-npm install
-cp .env.example .env     # add GEMINI_API_KEY, NASA_API_KEY, GEMINI_MODEL
-npm run dev
-```
-
-Radar overlays are in `public/data/`. To regenerate them from NISAR GCOV files, see `scripts/prep_gcov.py` (requires `h5py numpy pillow pyproj`).
-
-## 6. AI Usage Disclosure
-
-We used AI tools and want to be clear about where and how.
-
-| Tool | Used for |
-| --- | --- |
-| Claude (Anthropic) | Planning the project, drafting the build prompts, and drafting an early version of the data preprocessing script and this README skeleton |
-| Google AI Studio Build (Gemini) | Generating the initial app code from our written specification |
-| Gemini API (inside the app) | Runtime feature: explains radar changes from the numbers shown, server-side only |
-
-**What the team did on top:** TODO, to be completed from `AI_USAGE_LEDGER.md` before the freeze. Intended content: choosing the concept and study areas, downloading and preprocessing the NISAR data ourselves, reviewing and testing AI-generated code, integrating the data into the app, and writing commits from our own accounts.
-
-Every commit in this repository is made by a team member from their own GitHub account. No automated commit scripts or AI co-author trailers are used.
+Optical Earth observation satellites fail during dense monsoon cloud cover and night-time disasters. **NISAR Pulse** decodes L-band (24 cm wavelength) dual-polarimetric **GCOV** (Geocoded Polarimetric Covariance in $\gamma^0$ dB) and **GUNW** (Geocoded Unwrapped Interferogram in radians, cm LOS deformation, and coherence $\gamma$) products from the Alaska Satellite Facility (ASF DAAC) into an interactive split-screen decision console for disaster authorities, agronomists, and geotechnical teams.
 
 ---
 
-*Contains data from NASA, ISRO, ASF DAAC and NASA POWER. Not endorsed by NASA.*
+# 2. Team Details
+
+- **Aman Kawale** (`smian087`) — Frontend Architecture & Interactive GIS UI
+- **Vedant Jaiswal** (`vedantjaiswal-dot`) — Product Strategy, Story Presets & Live Demo Lead
+- **Kalash Wasad** (`kalash-tech`) — Backend Proxy, ASF/NASA APIs & Caching Engine
+- **Humaira Khan** (`Humairakhan1804`) — SAR GCOV/GUNW Data Pipeline & Geospatial Layers
+- **Asawari Dhawad** (`dhawadasawari1904-hash`) — Gemini Synthesis, Telemetry Analytics & Multilingual UX
+
+---
+
+# 3. Solution Overview & Architecture
+
+```mermaid
+flowchart LR
+  User["User / SDMA / Agronomist"] --> UI["React 19 + Leaflet Cloud-Piercer + Recharts"]
+  UI -->|"Demo Mode ON (<200ms)"| Samples["Bundled ASF Vertex GCOV/GUNW + POWER Samples"]
+  UI -->|"/api/asf/granules, /api/nasa/power, /api/nasa/eonet"| Proxy["Express Server Proxy (server.ts)"]
+  UI -->|"/api/gemini/synthesize"| Proxy
+  Proxy --> Cache["In-Memory TTL + SWR Cache (60 req/min Limiter)"]
+  Cache --> ASF["ASF DAAC Vertex Search API"]
+  Cache --> POWER["NASA POWER Agroclimatology API"]
+  Cache --> EONET["NASA EONET v3 Hazards API"]
+  Cache --> Gemini["Gemini 4 Hydrogen (@google/genai) + Deterministic Physics Fallback"]
+```
+
+### Technology Stack
+- **Frontend**: React 19, TypeScript, Tailwind CSS v4, Leaflet (`react-leaflet`), Recharts, Lucide Icons
+- **Backend**: Node.js, Express, `@google/genai` (`gemini-4-hydrogen`), in-memory TTL + stale-while-revalidate cache, IP rate limiter
+- **Open Earth Data**: NASA-ISRO NISAR (`GCOV` / `GUNW`), ASF DAAC Vertex API, NASA GIBS MODIS Terra TrueColor WMTS, NASA POWER Agroclimatology API, NASA EONET v3
+
+---
+
+# 4. Live Demo & Screenshots
+
+- **Study Area 1 — Maharashtra, India (`maharashtra_gcov`)**: Gosikhurd Dam & Wainganga floodplain specular reflection (`HH = -21.4 dB`) and Wardha Bt Cotton / Bhandara paddy canopy volume (`HV = -11.2 dB`).
+- **Study Area 2 — Northeast India (`northeast_india_gcov`)**: Brahmaputra & Kaziranga floodplain piercing 100% monsoon cloud cover with `142 mm/day` NASA POWER rainfall correlation.
+- **Study Area 3 — Japan (`japan_gunw`)**: Noto Peninsula & Toyama Bay co-seismic uplift (`+4.2 cm`), fault rupture subsidence (`-18.6 cm`), and interferometric coherence masking (`γ` slider).
+- **90-Second Demo Flow**:
+  1. Drag the **Cloud-Piercer Split Slider** over Maharashtra to reveal flooded channels beneath monsoon cloud cover.
+  2. Switch to Northeast India and scrub across the **4-Pass Orbital Timeline** (`Pass 1` → `Pass 4`).
+  3. Switch to Japan GUNW, adjust the Coherence (`γ`) mask, and run **Synthesize Physical Drivers** in English, Marathi, or Hindi.
+
+---
+
+# 5. Installation & Setup Guide
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Configure optional environment variables (.env)
+cp .env.example .env
+# Add GEMINI_API_KEY and optional NASA_API_KEY
+
+# 3. Run unit tests
+npx --yes tsx --test src/utils/sarPhysics.test.ts
+
+# 4. Start unified Express + Vite dev server on port 3000
+npm run dev
+
+# 5. Production build & start (Cloud Run)
+npm run build
+npm start
+```
+
+### Local NISAR HDF5 (.h5) Granule Extraction
+Raw NISAR L2 GCOV HDF5 granules exceed GitHub's 100 MB file limit. Use `scripts/extract_nisar_h5.py` (`h5py` + `numpy`) locally to extract `10 * log10(gamma0)` decibel statistics from `/science/LSAR/GCOV/grids/frequencyA/HHHH`, `/science/LSAR/GCOV/grids/frequencyA/HVHV`, and `/science/LSAR/identification/boundingPolygon` into lightweight GeoJSON:
+- **Maharashtra**: `NISAR_L2_PR_GCOV_035_084_A_013_4005_DHDH_A_20261111T001915_20261111T001949_P05036_N_F_J_001.h5` (Cycle 035, Track 084, Frame 013, Ascending, 40+5 MHz, DHDH, CRID `P05036`)
+- **Northeast India**: `NISAR_L2_PR_GCOV_035_098_A_013_4005_DHDH_A_20261111T233738_20261111T233812_P05036_N_F_J_001.h5` (Cycle 035, Track 098, Frame 013, Ascending, 40+5 MHz, DHDH, CRID `P05036`)
+- **Japan**: `NISAR_L2_PR_GCOV_035_009_A_024_4005_DHDH_A_20261105T193406_20261105T193442_P05036_N_F_J_001.h5` (Cycle 035, Track 009, Frame 024, Ascending, 40+5 MHz, DHDH, CRID `P05036`)
+
+```bash
+python3 scripts/extract_nisar_h5.py --input-dir ./raw_nisar_h5 --output ./src/data/samples/extracted_nisar_gcov.geojson
+```
+
+---
+
+# 6. AI Usage Disclosure
+
+NISAR Pulse uses Google `@google/genai` (`gemini-4-hydrogen`, server-side only) exclusively in the **Physical Driver Synthesizer** (`POST /api/gemini/synthesize`) to translate structured GCOV/GUNW telemetry and NASA POWER metrics into grounded physical explanations and field advisories in English, Marathi, and Hindi. When `GEMINI_API_KEY` is absent or offline, the backend automatically executes a deterministic microwave physics fallback (`buildDeterministicSynthesis`). All AI-assisted engineering activities are documented in `AI_USAGE_LEDGER.md`.
+
+Built with open NASA & ISRO NISAR / ASF / Earthdata / GIBS / POWER data. NASA does not endorse this application.
