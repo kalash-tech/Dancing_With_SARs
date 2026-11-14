@@ -10,7 +10,6 @@ import {
 import { REGION_DATASETS } from '../data/samples/asfVertexSamples.ts';
 import type { RegionId } from '../types/sar.ts';
 import { EarthGlobeCanvas } from './EarthGlobeCanvas.tsx';
-import { ParticleSpiralCanvas } from './ParticleSpiralCanvas.tsx';
 
 interface HomeLandingViewProps {
   activeRegionId: RegionId;
@@ -77,10 +76,9 @@ export function HomeLandingView({
       {/* Compact Header */}
       <section
         aria-label="Satellite Earth overview"
-        className="relative overflow-hidden flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-[var(--rr-border)] pb-4"
+        className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-[var(--rr-border)] pb-4"
       >
-        <ParticleSpiralCanvas />
-        <div className="relative space-y-1.5">
+        <div className="space-y-1.5">
           <div className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--rr-accent)]">
             Satellite Radar · Sees Through Clouds &amp; Darkness
           </div>
@@ -97,7 +95,7 @@ export function HomeLandingView({
           </p>
         </div>
 
-        <div className="relative flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={onOpenAbout}
