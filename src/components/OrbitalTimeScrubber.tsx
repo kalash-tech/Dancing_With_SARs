@@ -35,16 +35,16 @@ export function OrbitalTimeScrubber({
 
   return (
     <section
-      aria-label="12-Day Orbital Pass Time Scrubber"
-      className="aura-glass rounded-2xl p-4 space-y-3"
+      aria-label="Satellite Pass Timeline"
+      className="border border-[var(--rr-border)] bg-[var(--rr-bg)] p-4 space-y-3"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--rr-border)]">
         <div className="flex items-center gap-2">
-          <CalendarClock className="h-4 w-4 text-[#C04CFD]" aria-hidden="true" />
-          <h2 className="font-display text-sm font-semibold text-[#F8FAFC]">
-            12-Day Orbital Repeat Pass Scrubber
+          <CalendarClock className="h-4 w-4 text-[var(--rr-accent)]" aria-hidden="true" />
+          <h2 className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--rr-text)]">
+            Satellite Pass Timeline (Every 12 Days)
           </h2>
-          <span className="text-xs text-[#94A3B8] font-mono">
+          <span className="text-xs text-[var(--rr-muted)] font-mono">
             · {currentPass.acquisitionDate}
           </span>
         </div>
@@ -53,18 +53,18 @@ export function OrbitalTimeScrubber({
           <button
             type="button"
             onClick={onTogglePlay}
-            aria-label={isPlaying ? 'Pause orbital pass animation' : 'Play orbital pass animation'}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#C04CFD]/20 border border-[#C04CFD]/50 px-3 py-1.5 text-xs font-medium text-[#F8FAFC] hover:bg-[#C04CFD]/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF]"
+            aria-label={isPlaying ? 'Pause pass animation' : 'Animate satellite passes'}
+            className="inline-flex items-center gap-1.5 border border-[var(--rr-border-strong)] bg-[var(--rr-surface-inverse)] px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--rr-text-inverse)] hover:bg-[var(--rr-accent-solid)] hover:border-[var(--rr-accent-solid)] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-accent)]"
           >
             {isPlaying ? (
               <>
-                <Pause className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Pause Cycle</span>
+                <Pause className="h-3 w-3" aria-hidden="true" />
+                <span>Pause</span>
               </>
             ) : (
               <>
-                <Play className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Animate Passes</span>
+                <Play className="h-3 w-3" aria-hidden="true" />
+                <span>Animate</span>
               </>
             )}
           </button>
@@ -72,18 +72,18 @@ export function OrbitalTimeScrubber({
           <button
             type="button"
             onClick={onPinSnapshot}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/15 px-3 py-1.5 text-xs font-medium text-[#F8FAFC] hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF]"
+            className="inline-flex items-center gap-1.5 border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--rr-text)] hover:border-[var(--rr-border-strong)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-accent)]"
           >
-            <BookmarkPlus className="h-3.5 w-3.5 text-[#D4F844]" aria-hidden="true" />
-            <span>Pin Snapshot</span>
+            <BookmarkPlus className="h-3 w-3 text-[var(--rr-accent)]" aria-hidden="true" />
+            <span>Save Snapshot</span>
           </button>
         </div>
       </div>
 
-      {/* 4 Orbital Pass Stepper Buttons */}
+      {/* 4 Pass Buttons */}
       <div
         role="group"
-        aria-label="Orbital acquisition passes"
+        aria-label="Satellite pass dates"
         className="grid grid-cols-2 sm:grid-cols-4 gap-2"
       >
         {referenceZone.passes.map((pass, idx) => {
@@ -94,19 +94,19 @@ export function OrbitalTimeScrubber({
               type="button"
               onClick={() => onSelectPass(idx)}
               aria-pressed={active}
-              className={`rounded-xl px-3 py-2 text-left transition-colors border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF] ${
+              className={`px-3 py-2.5 text-left transition-colors border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-accent)] ${
                 active
-                  ? 'bg-[#00F0FF]/15 border-[#00F0FF]/60 text-[#F8FAFC]'
-                  : 'bg-[#100E14]/65 border-white/10 text-[#94A3B8] hover:text-[#F8FAFC] hover:border-white/25'
+                  ? 'border-[var(--rr-accent-solid)] bg-[var(--rr-accent-solid)] text-white'
+                  : 'border-[var(--rr-border)] bg-[var(--rr-surface)] text-[var(--rr-text)] hover:border-[var(--rr-border-strong)]'
               }`}
             >
-              <div className="flex items-center justify-between gap-1 text-[11px] font-mono">
-                <span className={active ? 'text-[#00F0FF] font-semibold' : ''}>
-                  {pass.passCode}
+              <div className="flex items-center justify-between gap-1 text-[10px] font-mono font-bold">
+                <span>{pass.passCode}</span>
+                <span className={active ? 'text-white/90' : 'text-[var(--rr-muted)]'}>
+                  {pass.acquisitionDate}
                 </span>
-                <span>{pass.acquisitionDate}</span>
               </div>
-              <div className="mt-1 truncate text-xs font-medium">
+              <div className="mt-1 truncate text-xs font-semibold">
                 {pass.passLabel.replace(/^Pass \d+ · /, '')}
               </div>
             </button>
@@ -114,58 +114,74 @@ export function OrbitalTimeScrubber({
         })}
       </div>
 
-      {/* Instant Delta Telemetry Strip */}
+      {/* Quick Numbers Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-mono tabular-nums">
         {isGunw ? (
           <>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">LOS Displacement</div>
-              <div className="text-base font-semibold text-[#E8559D]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--rr-muted)]">
+                Ground Shift
+              </div>
+              <div className="text-base font-bold text-[var(--rr-accent)]">
                 {formatSigned(currentPass.losDisplacementCm ?? 0, 1)} cm
               </div>
             </div>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">ΔLOS vs Baseline</div>
-              <div className="text-base font-semibold text-[#00F0FF]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--rr-muted)]">
+                Net Change
+              </div>
+              <div className="text-base font-bold text-[var(--rr-text)]">
                 {formatSigned(delta.deltaLosCm ?? 0, 1)} cm
               </div>
             </div>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">Unwrapped Phase</div>
-              <div className="text-base font-semibold text-[#F8FAFC]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--rr-muted)]">
+                Radar Phase
+              </div>
+              <div className="text-base font-bold text-[var(--rr-text)]">
                 {formatSigned(currentPass.unwrappedPhaseRad ?? 0, 2)} rad
               </div>
             </div>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">Coherence (γ)</div>
-              <div className="text-base font-semibold text-[#D4F844]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] tracking-[0.12em] text-[var(--rr-muted)]">
+                TRUST (γ)
+              </div>
+              <div className="text-base font-bold text-[var(--rr-text)]">
                 {(currentPass.coherence ?? 0).toFixed(2)}
               </div>
             </div>
           </>
         ) : (
           <>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">HH Backscatter</div>
-              <div className="text-base font-semibold text-[#00F0FF]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--rr-muted)]">
+                Water Signal (HH)
+              </div>
+              <div className="text-base font-bold text-[var(--rr-accent)]">
                 {currentPass.hhGamma0Db.toFixed(1)} dB
               </div>
             </div>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">Δγ⁰ HH</div>
-              <div className="text-base font-semibold text-[#C04CFD]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] tracking-[0.12em] text-[var(--rr-muted)]">
+                Change (Δγ⁰)
+              </div>
+              <div className="text-base font-bold text-[var(--rr-text)]">
                 {formatSigned(delta.deltaHhDb, 1)} dB
               </div>
             </div>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">HV Volume</div>
-              <div className="text-base font-semibold text-[#D4F844]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--rr-muted)]">
+                Crop Signal (HV)
+              </div>
+              <div className="text-base font-bold text-[var(--rr-text)]">
                 {currentPass.hvGamma0Db.toFixed(1)} dB
               </div>
             </div>
-            <div className="rounded-xl bg-[#100E14]/70 px-3 py-2 border border-white/10">
-              <div className="text-[11px] text-[#94A3B8]">Dielectric ε / Rain</div>
-              <div className="text-base font-semibold text-[#F8FAFC]">
+            <div className="border border-[var(--rr-border)] bg-[var(--rr-surface)] px-3 py-2">
+              <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--rr-muted)]">
+                Wetness / Rain
+              </div>
+              <div className="text-base font-bold text-[var(--rr-text)]">
                 {currentPass.dielectricConstantEst.toFixed(1)} · {currentPass.rainfallMm.toFixed(0)} mm
               </div>
             </div>
@@ -173,25 +189,25 @@ export function OrbitalTimeScrubber({
         )}
       </div>
 
-      {/* Saved LocalStorage Snapshots Bar */}
+      {/* Saved Snapshots Bar */}
       {savedSnapshots.length > 0 && (
-        <div className="border-t border-white/10 pt-2.5">
-          <div className="text-[11px] font-medium text-[#94A3B8] mb-2">
-            Pinned Local Snapshots ({savedSnapshots.length})
+        <div className="border-t border-[var(--rr-border)] pt-2.5">
+          <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--rr-muted)] mb-2">
+            Saved Snapshots ({savedSnapshots.length})
           </div>
           <div className="flex flex-wrap gap-2">
             {savedSnapshots.map((snap) => (
               <div
                 key={snap.id}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#100E14]/90 border border-white/15 px-2.5 py-1 text-xs"
+                className="inline-flex items-center gap-1.5 border border-[var(--rr-border)] bg-[var(--rr-surface)] px-2.5 py-1 text-xs"
               >
                 <button
                   type="button"
                   onClick={() => onLoadSnapshot(snap)}
-                  className="text-left text-[#F8FAFC] hover:text-[#00F0FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF] rounded"
+                  className="text-left text-[var(--rr-text)] hover:text-[var(--rr-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-accent)]"
                 >
-                  <span className="font-medium">{snap.zoneName.split(' ')[0]}</span>
-                  <span className="text-[#94A3B8] font-mono ml-1.5">
+                  <span className="font-semibold">{snap.zoneName.split(' ')[0]}</span>
+                  <span className="text-[var(--rr-muted)] font-mono ml-1.5">
                     {snap.acquisitionDate} ·{' '}
                     {snap.losDisplacementCm !== undefined
                       ? `${formatSigned(snap.losDisplacementCm, 1)} cm`
@@ -201,8 +217,8 @@ export function OrbitalTimeScrubber({
                 <button
                   type="button"
                   onClick={() => onDeleteSnapshot(snap.id)}
-                  aria-label={`Remove pinned snapshot ${snap.zoneName} ${snap.acquisitionDate}`}
-                  className="text-[#94A3B8] hover:text-[#EF4444] p-0.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF]"
+                  aria-label={`Remove saved snapshot ${snap.zoneName} ${snap.acquisitionDate}`}
+                  className="text-[var(--rr-muted)] hover:text-[var(--rr-danger-text)] p-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-accent)]"
                 >
                   <Trash2 className="h-3 w-3" aria-hidden="true" />
                 </button>
